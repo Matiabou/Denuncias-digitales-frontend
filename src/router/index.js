@@ -1,10 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 import LoginView from '../views/LoginView.vue'
 import CreateComplaintView from '../views/CreateComplaintView.vue'
 import EditComplaintView from '../views/EditComplaintView.vue'
-import ComplaintSandboxView from '../views/ComplaintSandboxView.vue'
-
+import ListadoDenunciasView from "@/views/ListadoDenunciasView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -15,7 +14,7 @@ const router = createRouter({
             component: LoginView
         },
         {
-            path: '/denuncias/nueva',
+            path: '/denuncias/crear',
             component: CreateComplaintView
         },
         {
@@ -24,13 +23,11 @@ const router = createRouter({
             component: EditComplaintView
         },
         {
-            path:
-                '/sandbox',
-
-            component:
-                ComplaintSandboxView
-        }
+            path: "/denuncias",
+            name: "denuncias",
+            component: ListadoDenunciasView,
+        },
     ]
 })
 
-export default router
+export default router;

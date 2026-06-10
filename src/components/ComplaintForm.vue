@@ -118,7 +118,7 @@ function submit() {
 
     alert("Cambios guardados");
 
-    router.push("/sandbox");
+    router.push("/denuncias");
 
     return;
   }
@@ -127,6 +127,6 @@ function submit() {
 
   alert("Denuncia creada");
 
-  router.push("/sandbox");
+  router.push("/denuncias");
 }
 </script>
