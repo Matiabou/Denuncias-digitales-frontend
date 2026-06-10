@@ -80,9 +80,9 @@
           </div>
         </div>
 
-        <button type="button">
-          Registrarse
-        </button>
+     <router-link class="secondary" to="/denuncias">
+        Registrarse
+      </router-link>
 
         <RouterLink
           to="/"
