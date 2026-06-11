@@ -1,18 +1,47 @@
 <template>
-  <div v-if="denuncia">
-    <h1>Detalle de la denuncia</h1>
+  <div class="detalle-container">
+    <div v-if="denuncia" class="detalle-card">
+      <h1>Detalle de la denuncia</h1>
 
-    <p><strong>Título:</strong> {{ denuncia.title }}</p>
-    <p><strong>Tipo:</strong> {{ denuncia.type }}</p>
-    <p><strong>Descripción:</strong> {{ denuncia.description }}</p>
-    <p><strong>Dirección:</strong> {{ denuncia.address }}</p>
-    <p><strong>Fecha:</strong> {{ denuncia.date }}</p>
-    <p><strong>Hora:</strong> {{ denuncia.time }}</p>
+      <div class="campo">
+        <span>Título</span>
+        <p>{{ denuncia.title }}</p>
+      </div>
 
-    <router-link to="/denuncias"> Volver al listado </router-link>
+      <div class="campo">
+        <span>Tipo</span>
+        <p>{{ denuncia.type }}</p>
+      </div>
+
+      <div class="campo">
+        <span>Descripción</span>
+        <p>{{ denuncia.description }}</p>
+      </div>
+
+      <div class="campo">
+        <span>Dirección</span>
+        <p>{{ denuncia.address }}</p>
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <span>Fecha</span>
+          <p>{{ denuncia.date }}</p>
+        </div>
+
+        <div class="campo">
+          <span>Hora</span>
+          <p>{{ denuncia.time }}</p>
+        </div>
+      </div>
+
+      <router-link to="/denuncias" class="btn-volver">
+        Volver al listado
+      </router-link>
+    </div>
+
+    <div v-else class="error">Denuncia no encontrada</div>
   </div>
-
-  <div v-else>Denuncia no encontrada</div>
 </template>
 
 <script setup>
@@ -34,6 +63,7 @@ onMounted(() => {
   console.log("Denuncia:", denuncia.value);
 });
 </script>
+
 <style scoped>
 .detalle-container {
   max-width: 800px;
