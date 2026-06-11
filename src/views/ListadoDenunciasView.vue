@@ -2,7 +2,9 @@
   <div class="denuncias-container">
     <header class="header">
       <h1>Mis Denuncias</h1>
-      <router-link class="btn primary" to="/denuncias/crear">Crear denuncia</router-link>
+      <router-link class="btn primary" to="/denuncias/crear"
+        >Crear denuncia</router-link
+      >
     </header>
 
     <section class="grid">
@@ -10,7 +12,13 @@
         <DenunciaCard :denuncia="denuncia" />
 
         <div class="card-actions">
-          <router-link class="btn" :to="`/denuncias/${denuncia.id}/editar`">Editar</router-link>
+          <router-link class="btn" :to="`/denuncias/${denuncia.id}`">
+            Ver detalle
+          </router-link>
+
+          <router-link class="btn" :to="`/denuncias/${denuncia.id}/editar`">
+            Editar
+          </router-link>
         </div>
       </article>
     </section>
@@ -28,7 +36,6 @@ import { useComplaintsStore } from "@/stores/complaints";
 
 const store = useComplaintsStore();
 
-
 const denuncias = computed(() =>
   store.complaints.map((c) => ({
     id: c.id,
@@ -37,7 +44,7 @@ const denuncias = computed(() =>
     fecha: c.date ?? c.fecha ?? "",
     estado: c.estado ?? "En revisión",
     _raw: c,
-  }))
+  })),
 );
 </script>
 

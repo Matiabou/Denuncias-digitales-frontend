@@ -15,8 +15,6 @@
     <small>
       {{ denuncia.fecha }}
     </small>
-
-    <button>Ver detalle</button>
   </article>
 </template>
 
