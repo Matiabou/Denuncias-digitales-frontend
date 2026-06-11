@@ -1,7 +1,7 @@
 <template>
   <div class="detalle-container">
     <div v-if="denuncia" class="detalle-card">
-      <h1>Detalle de la denuncia</h1>
+      <h1 class="titulo">Detalle de la denuncia</h1>
 
       <div class="campo">
         <span>Título</span>
@@ -83,7 +83,11 @@ h1 {
 }
 
 .campo {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
   margin-bottom: 18px;
+  border-left: 4px solid #2b8aef;
 }
 
 .campo span {
@@ -106,7 +110,6 @@ h1 {
 .fila .campo {
   flex: 1;
 }
-
 .btn-volver {
   display: inline-block;
   margin-top: 20px;

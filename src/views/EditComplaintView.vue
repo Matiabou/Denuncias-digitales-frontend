@@ -1,5 +1,6 @@
 <template>
   <div v-if="complaint" class="complaint-page">
+    <h1 class="titulo">Editar denuncia</h1>
     <ComplaintForm :initialData="complaint" />
   </div>
 </template>
@@ -19,3 +20,10 @@ const store = useComplaintsStore();
 
 const complaint = computed(() => store.getById(route.params.id));
 </script>
+
+<style scoped>
+.titulo {
+  text-align: center;
+  margin: 24px 0;
+}
+</style>

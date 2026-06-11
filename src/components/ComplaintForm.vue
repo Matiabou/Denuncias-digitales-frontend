@@ -130,3 +130,83 @@ function submit() {
   router.push("/denuncias");
 }
 </script>
+
+<style scoped>
+.complaint-form {
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-weight: 600;
+  color: #444;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 10px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+}
+
+.row .field {
+  flex: 1;
+}
+
+.upload {
+  padding: 20px;
+  border: 2px dashed #d0d7de;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #2b8aef;
+  color: white;
+}
+
+.actions .secondary {
+  background: #6c757d;
+}
+</style>

@@ -12,11 +12,14 @@
         <DenunciaCard :denuncia="denuncia" />
 
         <div class="card-actions">
-          <router-link class="btn" :to="`/denuncias/${denuncia.id}`">
+          <router-link class="btn primary" :to="`/denuncias/${denuncia.id}`">
             Ver detalle
           </router-link>
 
-          <router-link class="btn" :to="`/denuncias/${denuncia.id}/editar`">
+          <router-link
+            class="btn primary"
+            :to="`/denuncias/${denuncia.id}/editar`"
+          >
             Editar
           </router-link>
         </div>
@@ -77,6 +80,7 @@ const denuncias = computed(() =>
 .card-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
   margin-top: 8px;
 }
 .btn {
