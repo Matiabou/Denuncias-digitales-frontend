@@ -6,6 +6,12 @@ function normalizeComplaint(complaint = {}) {
     return {
         ...complaint,
         id,
+        title: complaint.title ?? complaint.titulo ?? "",
+        type: complaint.type ?? complaint.tipo ?? "",
+        description: complaint.description ?? complaint.descripcion ?? "",
+        address: complaint.address ?? complaint.direccion ?? complaint.ubicacion ?? "",
+        date: complaint.date ?? complaint.fecha ?? "",
+        time: complaint.time ?? complaint.hora ?? "",
         usuarioId: complaint.usuarioId ?? complaint.idUsuario ?? complaint.userId ?? complaint.usuario ?? null,
         descripcion: complaint.descripcion ?? complaint.description ?? "",
         fecha: complaint.fecha ?? complaint.date ?? "",
@@ -77,4 +83,29 @@ export async function updateComplaint(id, data, user) {
     });
 
     return normalizeComplaint(response?.denuncia ?? response);
+}
+
+export async function exportComplaintPDF(id) {
+    const apiBaseUrl = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+    const url = `${apiBaseUrl}/api/denuncias/${id}/pdf`;
+    
+    const response = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error al descargar PDF: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = `denuncia-${id}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(downloadUrl);
 }

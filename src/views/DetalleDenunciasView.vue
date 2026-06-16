@@ -1,6 +1,10 @@
 <template>
   <div class="detalle-container">
-    <div v-if="denuncia" class="detalle-card">
+    <div v-if="isLoading" class="detalle-card">
+      <p>Cargando denuncia...</p>
+    </div>
+
+    <div v-else-if="denuncia" class="detalle-card">
       <h1 class="titulo">Detalle de la denuncia</h1>
 
       <div class="campo">
@@ -45,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useComplaintsStore } from "@/stores/complaints";
 
@@ -53,15 +57,35 @@ const route = useRoute();
 const store = useComplaintsStore();
 
 const denuncia = ref(null);
+const isLoading = ref(false);
 
-onMounted(() => {
+async function loadDenuncia() {
   const id = route.params.id;
 
   denuncia.value = store.getById(id);
 
+  if (!denuncia.value) {
+    isLoading.value = true;
+    try {
+      await store.loadComplaint(id);
+      denuncia.value = store.getById(id);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   console.log("ID recibido:", id);
   console.log("Denuncia:", denuncia.value);
-});
+}
+
+onMounted(loadDenuncia);
+
+watch(
+  () => route.params.id,
+  () => {
+    loadDenuncia();
+  },
+);
 </script>
 
 <style scoped>

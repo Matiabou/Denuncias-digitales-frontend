@@ -21,7 +21,7 @@
 
         <div class="card-actions">
           <router-link class="btn primary" :to="`/denuncias/${denuncia.id}`">
-            Ver detalle
+            Detalle
           </router-link>
 
           <router-link
@@ -30,6 +30,14 @@
           >
             Editar
           </router-link>
+
+          <button
+            class="btn success"
+            @click="handleExportPDF(denuncia.id)"
+            :disabled="isExporting === denuncia.id"
+          >
+            {{ isExporting === denuncia.id ? "Exportando..." : "Exportar PDF" }}
+          </button>
         </div>
       </article>
     </section>
@@ -41,13 +49,26 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, watch, ref } from "vue";
 import DenunciaCard from "@/components/denuncias/DenunciaCard.vue";
 import { useComplaintsStore } from "@/stores/complaints";
 import { useAuthStore } from "@/stores/auth";
+import { exportComplaintPDF } from "@/services/complaintsService";
 
 const store = useComplaintsStore();
 const authStore = useAuthStore();
+const isExporting = ref(null);
+
+async function handleExportPDF(denunciaId) {
+  isExporting.value = denunciaId;
+  try {
+    await exportComplaintPDF(denunciaId);
+  } catch (error) {
+    alert("Error al descargar el PDF: " + error.message);
+  } finally {
+    isExporting.value = null;
+  }
+}
 
 async function loadData() {
   console.log(JSON.parse(JSON.stringify(authStore.usuario)));
@@ -105,22 +126,46 @@ const denuncias = computed(() =>
 .card-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
   margin-top: 8px;
 }
 .btn {
   display: inline-block;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 4px;
   text-decoration: none;
   color: var(--btn-color, #333);
   background: var(--btn-bg, #efefef);
   border: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.875rem;
+  height: 28px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
 }
 .btn.primary {
   background: #2b8aef;
   color: white;
   border-color: rgba(0, 0, 0, 0.08);
+}
+.btn.success {
+  background: #10b981;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  height: 28px;
+  line-height: 18px;
+}
+.btn.success:hover {
+  background: #059669;
+}
+.btn.success:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
 }
 .empty {
   text-align: center;

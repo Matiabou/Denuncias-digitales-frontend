@@ -76,8 +76,8 @@ export const useComplaintsStore = defineStore("complaints", {
       return complaint;
     },
 
-    getById(id) {
+    getById(id) { 
       return this.complaints.find((item) => String(item.id) === String(id));
     },
   },
-});
+}); 
