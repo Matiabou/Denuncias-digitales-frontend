@@ -5,18 +5,17 @@
         <h1>Denuncias Digitales</h1>
 
         <p>
-          Realizá denuncias desde cualquier lugar y hacé seguimiento
-          de tus trámites de forma segura.
+          Creá tu cuenta para completar tus datos y empezar a gestionar denuncias.
         </p>
       </div>
     </section>
 
     <section class="login-section">
-      <LoginForm />
+      <RegisterForm />
     </section>
   </main>
 </template>
 
 <script setup>
-import LoginForm from "@/components/LoginForm.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 </script>

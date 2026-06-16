@@ -1,21 +1,28 @@
 import { useAuthStore } from "@/stores/auth";
-import users from "@/mocks/users.json";
+
+import { createUser, loginUser } from "@/services/usersService";
 
 export function useAuth() {
   const authStore = useAuthStore();
 
-  function login(email, password) {
-    const usuario = users.find(
-      (u) => u.email === email && u.password === password,
-    );
-
-    if (!usuario) {
-      return false;
-    }
+  async function login(dni, contrasenia) {
+    const usuario = await loginUser({ dni, contrasenia });
 
     authStore.setUsuario(usuario);
 
-    return true;
+    return usuario;
+  }
+
+  async function register(data) {
+    const usuario = await createUser({
+      ...data,
+      contrasenia: data.contrasenia ?? data.password,
+      rol: data.rol ?? "ciudadano",
+    });
+
+    authStore.setUsuario(usuario);
+
+    return usuario;
   }
 
   function logout() {
@@ -24,6 +31,7 @@ export function useAuth() {
 
   return {
     login,
+    register,
     logout,
   };
 }

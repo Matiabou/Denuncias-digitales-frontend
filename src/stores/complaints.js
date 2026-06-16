@@ -1,81 +1,83 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useComplaintsStore =
-    defineStore(
-        'complaints',
-        {
+import {
+  createComplaint,
+  getComplaintById,
+  getComplaints,
+  updateComplaint,
+} from "@/services/complaintsService";
 
-            state: () => ({
+export const useComplaintsStore = defineStore("complaints", {
+  state: () => ({
+    complaints: [],
+    isLoading: false,
+    error: null,
+  }),
 
-                complaints: [
+  actions: {
+    async loadComplaints(user) {
+      this.isLoading = true;
+      this.error = null;
 
-                    {
-                        id: 1,
+      try {
+        this.complaints = await getComplaints(user);
+      } catch (error) {
+        this.error = error.message || "No se pudieron cargar las denuncias";
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
-                        title: 'Robo bicicleta',
+    async loadComplaint(id) {
+      const existing = this.getById(id);
 
-                        type: 'Robo',
+      if (existing) {
+        return existing;
+      }
 
-                        description:
-                            'Se produjo en la calle.',
+      this.isLoading = true;
+      this.error = null;
 
-                        address:
-                            'Avenida Corrientes',
+      try {
+        const complaint = await getComplaintById(id);
+        const index = this.complaints.findIndex((item) => item.id === complaint.id);
 
-                        date:
-                            '2026-06-09',
-
-                        time:
-                            '18:00'
-
-                    }
-
-                ]
-
-            }),
-
-            actions: {
-
-                create(data) {
-
-                    this.complaints.push({
-
-                        id:
-                            Date.now(),
-
-                        ...data
-
-                    })
-
-                },
-
-                update(id, data) {
-
-                    const complaint =
-                        this.complaints.find(
-                            c => c.id === id
-                        )
-
-                    if (!complaint)
-                        return
-
-                    Object.assign(
-                        complaint,
-                        data
-                    )
-
-                },
-
-                getById(id) {
-
-                    return this.complaints.find(
-                        c =>
-                            c.id === Number(id)
-                    )
-
-                }
-
-            }
-
+        if (index >= 0) {
+          this.complaints[index] = complaint;
+        } else {
+          this.complaints.push(complaint);
         }
-    )
+
+        return complaint;
+      } catch (error) {
+        this.error = error.message || "No se pudo cargar la denuncia";
+        return null;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async create(data, user) {
+      const complaint = await createComplaint(data, user);
+      this.complaints.unshift(complaint);
+      return complaint;
+    },
+
+    async update(id, data, user) {
+      const complaint = await updateComplaint(id, data, user);
+      const index = this.complaints.findIndex((item) => item.id === complaint.id);
+
+      if (index >= 0) {
+        this.complaints[index] = complaint;
+      } else {
+        this.complaints.push(complaint);
+      }
+
+      return complaint;
+    },
+
+    getById(id) {
+      return this.complaints.find((item) => item.id === Number(id));
+    },
+  },
+});

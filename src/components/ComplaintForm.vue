@@ -69,21 +69,26 @@
     </div>
 
     <div class="actions">
+      <p v-if="error" class="error">
+        {{ error }}
+      </p>
+
       <button class="secondary" type="button">Guardar borrador</button>
 
-      <button type="submit">
-        {{ isEdit ? "Guardar cambios" : "Enviar denuncia" }}
+      <button :disabled="isSaving" type="submit">
+        {{ isSaving ? "Guardando..." : isEdit ? "Guardar cambios" : "Enviar denuncia" }}
       </button>
     </div>
   </form>
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import { useRouter } from "vue-router";
 
 import { useComplaintsStore } from "../stores/complaints";
+import { useAuthStore } from "@/stores/auth";
 
 const props = defineProps({
   initialData: {
@@ -95,38 +100,77 @@ const props = defineProps({
 const router = useRouter();
 
 const store = useComplaintsStore();
+const authStore = useAuthStore();
+
+const error = ref("");
+const isSaving = ref(false);
+
+function buildForm(data = {}) {
+  return {
+    title: data.title || "",
+    type: data.type || "",
+    description: data.description || "",
+    address: data.address || "",
+    date: data.date || "",
+    time: data.time || "",
+  };
+}
 
 const form = reactive({
-  title: props.initialData.title || "",
-
-  type: props.initialData.type || "",
-
-  description: props.initialData.description || "",
-
-  address: props.initialData.address || "",
-
-  date: props.initialData.date || "",
-
-  time: props.initialData.time || "",
+  ...buildForm(props.initialData),
 });
 
 const isEdit = computed(() => !!props.initialData.id);
 
-function submit() {
+const evidenceText = computed(() =>
+  isEdit.value ? "Los archivos adjuntos no se modifican desde esta versión." : "Adjuntá archivos si querés dejar constancia adicional."
+);
+
+watch(
+  () => props.initialData,
+  (newData) => {
+    Object.assign(form, buildForm(newData));
+  },
+  { deep: true, immediate: true },
+);
+
+async function submit() {
+  error.value = "";
+  isSaving.value = true;
+
   if (isEdit.value) {
-    store.update(props.initialData.id, form);
+    try {
+      await store.update(props.initialData.id, form, authStore.usuario);
 
-    alert("Cambios guardados");
+      alert("Cambios guardados");
 
-    router.push("/denuncias");
+      router.push("/denuncias");
+    } catch (saveError) {
+      error.value = saveError.message || "No se pudo guardar la denuncia";
+    } finally {
+      isSaving.value = false;
+    }
 
     return;
   }
 
-  store.create(form);
+  try {
+    await store.create(form, authStore.usuario);
 
-  alert("Denuncia creada");
+    alert("Denuncia creada");
 
-  router.push("/denuncias");
+    router.push("/denuncias");
+  } catch (createError) {
+    error.value = createError.message || "No se pudo crear la denuncia";
+  } finally {
+    isSaving.value = false;
+  }
 }
 </script>
+
+<style scoped>
+.error {
+  color: #b42318;
+  margin: 0;
+}
+</style>

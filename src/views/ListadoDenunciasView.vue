@@ -5,6 +5,14 @@
       <router-link class="btn primary" to="/denuncias/crear">Crear denuncia</router-link>
     </header>
 
+    <p v-if="store.isLoading" class="empty">
+      Cargando denuncias...
+    </p>
+
+    <p v-else-if="store.error" class="empty error">
+      {{ store.error }}
+    </p>
+
     <section class="grid">
       <article class="card" v-for="denuncia in denuncias" :key="denuncia.id">
         <DenunciaCard :denuncia="denuncia" />
@@ -22,11 +30,26 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted, watch } from "vue";
 import DenunciaCard from "@/components/denuncias/DenunciaCard.vue";
 import { useComplaintsStore } from "@/stores/complaints";
+import { useAuthStore } from "@/stores/auth";
 
 const store = useComplaintsStore();
+const authStore = useAuthStore();
+
+async function loadData() {
+  await store.loadComplaints(authStore.usuario);
+}
+
+onMounted(loadData);
+
+watch(
+  () => authStore.usuario,
+  () => {
+    loadData();
+  },
+);
 
 
 const denuncias = computed(() =>
@@ -90,5 +113,8 @@ const denuncias = computed(() =>
   text-align: center;
   color: #666;
   margin-top: 20px;
+}
+.error {
+  color: #b42318;
 }
 </style>
