@@ -1,9 +1,13 @@
 import { apiRequest } from "./api";
 
 function normalizeUser(user = {}) {
+    const id = user.id ?? user._id ?? user.idUsuario ?? user.usuarioId ?? null;
+
     return {
         ...user,
-        id: user.id,
+        id,
+        idUsuario: user.idUsuario ?? id,
+        usuarioId: user.usuarioId ?? id,
         nombre: user.nombre ?? user.name ?? user.username ?? "",
         apellido: user.apellido ?? "",
         email: user.email ?? "",

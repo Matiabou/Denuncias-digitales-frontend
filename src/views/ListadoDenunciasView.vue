@@ -65,10 +65,11 @@ watch(
 const denuncias = computed(() =>
   store.complaints.map((c) => ({
     id: c.id,
-    titulo: c.title ?? c.titulo ?? "Sin título",
-    descripcion: c.description ?? c.descripcion ?? "",
-    fecha: c.date ?? c.fecha ?? "",
+    titulo: c.descripcion ?? "Sin descripción",
+    descripcion: c.descripcion ?? "",
+    fecha: c.fecha ?? "",
     estado: c.estado ?? "En revisión",
+    ubicacion: c.ubicacion ?? "",
     _raw: c,
   })),
 );

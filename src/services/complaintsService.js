@@ -1,46 +1,46 @@
 import { apiRequest } from "./api";
 
 function normalizeComplaint(complaint = {}) {
+    const id = complaint.id ?? complaint._id ?? complaint.idDenuncia ?? null;
+
     return {
         ...complaint,
-        id: complaint.id,
-        title: complaint.title ?? complaint.titulo ?? "",
-        type: complaint.type ?? complaint.tipo ?? "",
-        description: complaint.description ?? complaint.descripcion ?? "",
-        address: complaint.address ?? complaint.direccion ?? "",
-        date: complaint.date ?? complaint.fecha ?? "",
-        time: complaint.time ?? complaint.hora ?? "",
+        id,
+        usuarioId: complaint.usuarioId ?? complaint.idUsuario ?? complaint.userId ?? complaint.usuario ?? null,
+        descripcion: complaint.descripcion ?? complaint.description ?? "",
+        fecha: complaint.fecha ?? complaint.date ?? "",
+        ubicacion: complaint.ubicacion ?? complaint.address ?? complaint.direccion ?? "",
         estado: complaint.estado ?? complaint.status ?? "En revisión",
-        usuarioId:
-            complaint.usuarioId ?? complaint.idUsuario ?? complaint.userId ?? null,
     };
 }
 
 function buildComplaintPayload(data, user) {
-    const userId = user?.id ?? data.usuarioId ?? data.idUsuario ?? data.userId;
+    const userId =
+        user?.id ??
+        user?.idUsuario ??
+        user?.usuarioId ??
+        user?._id ??
+        data.usuarioId ??
+        data.idUsuario ??
+        data.userId ??
+        data.usuario ??
+        null;
 
     return {
-        title: data.title,
-        titulo: data.title,
-        type: data.type,
-        tipo: data.type,
-        description: data.description,
-        descripcion: data.description,
-        address: data.address,
-        direccion: data.address,
-        date: data.date,
-        fecha: data.date,
-        time: data.time,
-        hora: data.time,
+        descripcion: data.descripcion ?? data.description ?? "",
+        fecha: data.fecha ?? data.date ?? "",
+        ubicacion: data.ubicacion ?? data.address ?? data.direccion ?? "",
+        estado: data.estado ?? data.status ?? "En revisión",
         usuarioId: userId,
-        idUsuario: userId,
     };
 }
 
 export async function getComplaints(user) {
-    const path = user?.rol === "admin" || !user?.id
+    const userId = user?.id ?? user?.idUsuario ?? user?.usuarioId ?? user?._id;
+
+    const path = user?.rol === "admin" || !userId
         ? "/api/denuncias"
-        : `/api/denuncias/usuario/${user.id}`;
+        : `/api/denuncias/usuario/${userId}`;
 
     const response = await apiRequest(path);
 

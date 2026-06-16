@@ -6,29 +6,9 @@
       </h2>
 
       <div class="field">
-        <label>Título</label>
-
-        <input v-model="form.title" />
-      </div>
-
-      <div class="field">
-        <label>Tipo de denuncia</label>
-
-        <select v-model="form.type">
-          <option value="">Seleccionar</option>
-
-          <option>Robo</option>
-          <option>Hurto</option>
-          <option>Fraude</option>
-          <option>Violencia</option>
-          <option>Otro</option>
-        </select>
-      </div>
-
-      <div class="field">
         <label>Descripción</label>
 
-        <textarea rows="6" v-model="form.description" />
+        <textarea rows="6" v-model="form.descripcion" />
       </div>
     </div>
 
@@ -38,20 +18,14 @@
       <div class="field">
         <label>Dirección</label>
 
-        <input v-model="form.address" />
+        <input v-model="form.ubicacion" />
       </div>
 
       <div class="row">
         <div class="field">
           <label>Fecha</label>
 
-          <input type="date" v-model="form.date" />
-        </div>
-
-        <div class="field">
-          <label>Hora</label>
-
-          <input type="time" v-model="form.time" />
+          <input type="date" v-model="form.fecha" />
         </div>
       </div>
     </div>
@@ -107,12 +81,10 @@ const isSaving = ref(false);
 
 function buildForm(data = {}) {
   return {
-    title: data.title || "",
-    type: data.type || "",
-    description: data.description || "",
-    address: data.address || "",
-    date: data.date || "",
-    time: data.time || "",
+    descripcion: data.descripcion || data.description || "",
+    ubicacion: data.ubicacion || data.address || data.direccion || "",
+    fecha: data.fecha || data.date || "",
+    estado: data.estado || "en_revision",
   };
 }
 
