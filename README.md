@@ -1,42 +1,57 @@
-# denuncias-digitales-frontend
+# Denuncias Digitales - Sistema de Gestión de Denuncias
 
-This template should help get you started developing with Vue 3 in Vite.
+## Descripción del Proyecto
 
-## Recommended IDE Setup
+Esta plataforma web está diseñada para gestionar denuncias de manera eficiente y rápida, con una interfaz simple y accesible.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Permite registrar, visualizar y modificar denuncias realizadas por los usuarios.
 
-## Recommended Browser Setup
+## Arquitectura del Proyecto
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+```text
+src/
+├── assets/
+├── components/
+├── composables/
+├── mocks/
+├── router/
+├── services/
+├── stores/
+└── views/
+```
 
-## Type Support for `.vue` Imports in TS
+## Instalación
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Clonar el repositorio
 
-## Customize configuration
+```bash
+git clone https://github.com/Matiabou/Denuncias-digitales-frontend.git
+```
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### Instalar dependencias
 
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Ejecutar el proyecto
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Generar build de producción
 
-```sh
+```bash
 npm run build
 ```
+
+## Estado Global
+
+La aplicación utiliza Pinia para la gestión del estado global.
+
+## Deploy y Secrets de GitHub
+
+La aplicación se encuentra desplegada mediante Vercel.
+
+Actualmente el proyecto no utiliza Secrets de GitHub para el proceso de despliegue.

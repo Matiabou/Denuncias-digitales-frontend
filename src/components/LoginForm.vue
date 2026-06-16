@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
   <div class="login-card">
 
@@ -38,13 +41,9 @@
         o
       </span>
 
-      <button
-        class="secondary"
-        type="button"
-        @click="router.push('/registro')"
-      >
+      <router-link class="secondary" to="/registro">
         Crear cuenta
-      </button>
+      </router-link>
 
     </form>
 

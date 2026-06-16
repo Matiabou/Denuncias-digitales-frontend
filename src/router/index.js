@@ -5,6 +5,8 @@ import RegisterView from "../views/RegisterView.vue";
 import CreateComplaintView from "../views/CreateComplaintView.vue";
 import EditComplaintView from "../views/EditComplaintView.vue";
 import ListadoDenunciasView from "@/views/ListadoDenunciasView.vue";
+import DetalleDenunciasView from "../views/DetalleDenunciasView.vue";
+import RegistroView from "../views/RegistroView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -26,6 +28,11 @@ const router = createRouter({
         {
             path: "/denuncias/crear",
             component: CreateComplaintView
+        },
+        {
+            path: "/denuncias/:id",
+            name: "detalle-denuncia",
+            component: DetalleDenunciasView,
         },
         {
             path:

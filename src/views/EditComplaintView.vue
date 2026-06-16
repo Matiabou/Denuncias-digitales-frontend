@@ -44,3 +44,10 @@ watch(
 
 const complaint = computed(() => store.getById(route.params.id));
 </script>
+
+<style scoped>
+.titulo {
+  text-align: center;
+  margin: 24px 0;
+}
+</style>

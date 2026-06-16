@@ -2,7 +2,9 @@
   <div class="denuncias-container">
     <header class="header">
       <h1>Mis Denuncias</h1>
-      <router-link class="btn primary" to="/denuncias/crear">Crear denuncia</router-link>
+      <router-link class="btn primary" to="/denuncias/crear"
+        >Crear denuncia</router-link
+      >
     </header>
 
     <p v-if="store.isLoading" class="empty">
@@ -18,7 +20,16 @@
         <DenunciaCard :denuncia="denuncia" />
 
         <div class="card-actions">
-          <router-link class="btn" :to="`/denuncias/${denuncia.id}/editar`">Editar</router-link>
+          <router-link class="btn primary" :to="`/denuncias/${denuncia.id}`">
+            Ver detalle
+          </router-link>
+
+          <router-link
+            class="btn primary"
+            :to="`/denuncias/${denuncia.id}/editar`"
+          >
+            Editar
+          </router-link>
         </div>
       </article>
     </section>
@@ -51,7 +62,6 @@ watch(
   },
 );
 
-
 const denuncias = computed(() =>
   store.complaints.map((c) => ({
     id: c.id,
@@ -60,7 +70,7 @@ const denuncias = computed(() =>
     fecha: c.date ?? c.fecha ?? "",
     estado: c.estado ?? "En revisión",
     _raw: c,
-  }))
+  })),
 );
 </script>
 
@@ -93,6 +103,7 @@ const denuncias = computed(() =>
 .card-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
   margin-top: 8px;
 }
 .btn {
