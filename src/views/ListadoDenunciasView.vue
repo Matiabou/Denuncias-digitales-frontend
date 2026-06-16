@@ -36,7 +36,7 @@
             @click="handleExportPDF(denuncia.id)"
             :disabled="isExporting === denuncia.id"
           >
-            {{ isExporting === denuncia.id ? "Exportando..." : "Exportar PDF" }}
+            {{ isExporting === denuncia.id ? "Exportando..." : "Exportar" }}
           </button>
         </div>
       </article>
@@ -131,7 +131,7 @@ const denuncias = computed(() =>
   margin-top: 8px;
 }
 .btn {
-  display: inline-block;
+  display: inline-flex;
   padding: 5px 10px;
   border-radius: 4px;
   text-decoration: none;
@@ -141,8 +141,8 @@ const denuncias = computed(() =>
   font-size: 0.875rem;
   height: 28px;
   line-height: 18px;
-  display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .btn.primary {
   background: #2b8aef;
@@ -152,13 +152,8 @@ const denuncias = computed(() =>
 .btn.success {
   background: #10b981;
   color: white;
-  border: none;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  height: 28px;
-  line-height: 18px;
+  border-color: rgba(0, 0, 0, 0.08);
+  padding: 4px 8px;
 }
 .btn.success:hover {
   background: #059669;
