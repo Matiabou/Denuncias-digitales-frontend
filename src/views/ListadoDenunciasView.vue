@@ -50,6 +50,7 @@ const store = useComplaintsStore();
 const authStore = useAuthStore();
 
 async function loadData() {
+  console.log(JSON.parse(JSON.stringify(authStore.usuario)));
   await store.loadComplaints(authStore.usuario);
 }
 

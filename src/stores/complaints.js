@@ -77,7 +77,7 @@ export const useComplaintsStore = defineStore("complaints", {
     },
 
     getById(id) {
-      return this.complaints.find((item) => item.id === Number(id));
+      return this.complaints.find((item) => String(item.id) === String(id));
     },
   },
 });

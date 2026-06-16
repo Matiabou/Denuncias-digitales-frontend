@@ -7,6 +7,7 @@ import EditComplaintView from "../views/EditComplaintView.vue";
 import ListadoDenunciasView from "@/views/ListadoDenunciasView.vue";
 import DetalleDenunciasView from "../views/DetalleDenunciasView.vue";
 import RegistroView from "../views/RegistroView.vue";
+import DatosPersonalesView from "../views/DatosPersonalesView.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -44,6 +45,11 @@ const router = createRouter({
             name: "denuncias",
             component: ListadoDenunciasView,
         },
+        {
+            path: "/datos-personales",
+            name: "datosPersonales",
+            component: DatosPersonalesView,
+        }
     ]
 })
 

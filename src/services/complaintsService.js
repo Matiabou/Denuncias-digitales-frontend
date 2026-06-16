@@ -65,14 +65,10 @@ export async function getComplaintById(id) {
     return normalizeComplaint(response?.denuncia ?? response);
 }
 
-export async function createComplaint(data, user) {
-    const response = await apiRequest("/api/denuncias", {
-        method: "POST",
-        body: JSON.stringify(buildComplaintPayload(data, user)),
-    });
-
-    return normalizeComplaint(response?.denuncia ?? response);
-}
+export async function createComplaint(data, user) { 
+    const response = await apiRequest("/api/denuncias", 
+        { method: "POST", body: JSON.stringify(buildComplaintPayload(data, user)), });
+         return normalizeComplaint(response?.denuncia ?? response); }
 
 export async function updateComplaint(id, data, user) {
     const response = await apiRequest(`/api/denuncias/${id}`, {
