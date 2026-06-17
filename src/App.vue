@@ -1,9 +1,10 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { RouterView, RouterLink, useRouter } from "vue-router";
+import { RouterView, RouterLink, useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 
 const { estaAutenticado } = storeToRefs(authStore);
@@ -16,7 +17,7 @@ function cerrarSesion() {
 
 <template>
   <div class="layout">
-    <aside v-if="estaAutenticado" class="sidebar">
+    <aside v-if="estaAutenticado && route.path !== '/login'" class="sidebar">
       <RouterLink to="/denuncias">
         Mis denuncias
       </RouterLink>
