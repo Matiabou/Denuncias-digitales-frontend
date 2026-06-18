@@ -42,7 +42,9 @@
             <td class="actions">
               <router-link class="btn primary small" :to="`/denuncias/${denuncia.id}`">Detalle</router-link>
               <router-link class="btn primary small" :to="`/denuncias/${denuncia.id}/editar`">Editar</router-link>
-              <button  class="btn success small export-btn" @click="handleExportPDF(denuncia.id)" :disabled="isExporting === denuncia.id">                {{ isExporting === denuncia.id ? 'Exportando...' : 'Exportar' }}
+              <router-link class="btn success small" :to="`/denuncias/${denuncia.id}/evidencia`">Subir evidencia</router-link>
+              <button class="btn success small export-btn" @click="handleExportPDF(denuncia.id)" :disabled="isExporting === denuncia.id">
+                {{ isExporting === denuncia.id ? 'Exportando...' : 'Exportar' }}
               </button>
             </td>
           </tr>
@@ -54,7 +56,6 @@
 
 <script setup>
 import { computed, onMounted, watch, ref } from "vue";
-import DenunciaCard from "@/components/denuncias/DenunciaCard.vue";
 import { useComplaintsStore } from "@/stores/complaints";
 import { useAuthStore } from "@/stores/auth";
 import { exportComplaintPDF } from "@/services/complaintsService";

@@ -19,11 +19,14 @@ async function parseResponse(response) {
 }
 
 export async function apiRequest(path, options = {}) {
+    const hasFormData = options.body instanceof FormData;
     const response = await fetch(buildUrl(path), {
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {}),
-        },
+        headers: hasFormData
+            ? { ...(options.headers || {}) }
+            : {
+                  "Content-Type": "application/json",
+                  ...(options.headers || {}),
+              },
         ...options,
     });
 

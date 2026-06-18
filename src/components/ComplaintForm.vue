@@ -6,6 +6,22 @@
       </h2>
 
       <div class="field">
+        <label for="tipo">Tipo de denuncia</label>
+
+        <select id="tipo" v-model="form.type" required>
+          <option disabled value="">Seleccioná un tipo</option>
+          <option value="robo">Robo</option>
+          <option value="hurto">Hurto</option>
+          <option value="vandalismo">Vandalismo</option>
+          <option value="fraude">Fraude</option>
+          <option value="violencia">Violencia</option>
+          <option value="acoso">Acoso</option>
+          <option value="estafa">Estafa</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+
+      <div class="field">
         <label>Descripción</label>
 
         <textarea rows="6" v-model="form.descripcion" />
@@ -27,18 +43,12 @@
 
           <input type="date" v-model="form.fecha" />
         </div>
-      </div>
-    </div>
 
-    <div class="card">
-      <h2>Evidencia</h2>
+        <div class="field">
+          <label>Hora</label>
 
-      <div class="upload">
-        <input type="file" multiple />
-
-        <p>
-          {{ evidenceText }}
-        </p>
+          <input type="time" v-model="form.time" />
+        </div>
       </div>
     </div>
 
@@ -82,8 +92,10 @@ const isSaving = ref(false);
 function buildForm(data = {}) {
   return {
     descripcion: data.descripcion || data.description || "",
+    type: data.type || data.tipo || "",
     ubicacion: data.ubicacion || data.address || data.direccion || "",
     fecha: data.fecha || data.date || "",
+    time: data.time || data.hora || "",
     estado: data.estado || "en_revision",
   };
 }
@@ -93,10 +105,6 @@ const form = reactive({
 });
 
 const isEdit = computed(() => !!props.initialData.id);
-
-const evidenceText = computed(() =>
-  isEdit.value ? "Los archivos adjuntos no se modifican desde esta versión." : "Adjuntá archivos si querés dejar constancia adicional."
-);
 
 watch(
   () => props.initialData,

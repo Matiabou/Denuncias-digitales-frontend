@@ -34,7 +34,9 @@ function buildComplaintPayload(data, user) {
 
     return {
         descripcion: data.descripcion ?? data.description ?? "",
+        tipo: data.type ?? data.tipo ?? "",
         fecha: data.fecha ?? data.date ?? "",
+        hora: data.time ?? data.hora ?? "",
         ubicacion: data.ubicacion ?? data.address ?? data.direccion ?? "",
         estado: data.estado ?? data.status ?? "En revisión",
         usuarioId: userId,
@@ -108,4 +110,13 @@ export async function exportComplaintPDF(id) {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(downloadUrl);
+}
+
+export async function uploadEvidence(id, formData) {
+    const response = await apiRequest(`/api/denuncias/${id}/evidencia`, {
+        method: "POST",
+        body: formData,
+    });
+
+    return response?.denuncia ?? response;
 }

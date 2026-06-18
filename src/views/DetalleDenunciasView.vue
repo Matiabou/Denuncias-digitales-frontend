@@ -8,12 +8,7 @@
       <h1 class="titulo">Detalle de la denuncia</h1>
 
       <div class="campo">
-        <span>Título</span>
-        <p>{{ denuncia.title }}</p>
-      </div>
-
-      <div class="campo">
-        <span>Tipo</span>
+        <span>Tipo de denuncia</span>
         <p>{{ denuncia.type }}</p>
       </div>
 
@@ -39,6 +34,34 @@
         </div>
       </div>
 
+      <div class="campo evidencia-section">
+        <span>Evidencias</span>
+
+        <div v-if="denuncia.evidencias && denuncia.evidencias.length">
+          <div
+            v-for="(archivo, index) in denuncia.evidencias"
+            :key="index"
+            class="evidencia-item"
+          >
+            <div class="evidencia-content">
+              <div class="evidencia-info">
+                <p class="evidencia-name">
+                  {{ archivo.nombre || archivo.filename || archivo.ruta?.split('/').pop() || 'Evidencia' }}
+                </p>
+
+               <button class="btn-descarga-mini" @click="descargarArchivo(archivo)"> ⬇ Descargar</button>
+
+                <small class="evidencia-date">{{ archivo.fecha }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p v-else>
+          No hay evidencias adjuntas
+        </p>
+      </div>
+
       <router-link to="/denuncias" class="btn-volver">
         Volver al listado
       </router-link>
@@ -58,6 +81,24 @@ const store = useComplaintsStore();
 
 const denuncia = ref(null);
 const isLoading = ref(false);
+
+async function descargarArchivo(archivo) {
+  try {
+    const response = await fetch(archivo.url);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = archivo.nombre || archivo.filename || archivo.ruta?.split('/').pop() || 'evidencia';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error descargando archivo:', error);
+    alert('Error al descargar el archivo');
+  }
+}
 
 async function loadDenuncia() {
   const id = route.params.id;
@@ -89,6 +130,28 @@ watch(
 </script>
 
 <style scoped>
+.btn-descarga-mini {
+  background: #f3f6ff;
+  border: 1px solid #dbe3ff;
+  color: #4a6cf7;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+.btn-descarga-mini:hover {
+  background: #e9eeff;
+  border-color: #b9c6ff;
+  transform: translateY(-1px);
+}
+
+.btn-descarga-mini:active {
+  transform: translateY(0px);
+}
 .detalle-container {
   max-width: 800px;
   margin: 40px auto;
@@ -133,6 +196,43 @@ h1 {
 
 .fila .campo {
   flex: 1;
+}
+.evidencia-section {
+  padding: 18px;
+}
+.evidencia-item {
+  margin-bottom: 16px;
+}
+.evidencia-content {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.evidencia-img {
+  max-width: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.evidencia-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.evidencia-name {
+  margin: 0;
+  font-weight: 600;
+}
+.evidencia-link {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+.evidencia-link:hover {
+  text-decoration: underline;
+}
+.evidencia-date {
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 .btn-volver {
   display: inline-block;

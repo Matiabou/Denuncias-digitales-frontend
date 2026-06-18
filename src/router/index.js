@@ -6,6 +6,7 @@ import CreateComplaintView from "../views/CreateComplaintView.vue";
 import EditComplaintView from "../views/EditComplaintView.vue";
 import ListadoDenunciasView from "@/views/ListadoDenunciasView.vue";
 import DetalleDenunciasView from "../views/DetalleDenunciasView.vue";
+import UploadEvidenceView from "../views/UploadEvidenceView.vue";
 import DatosPersonalesView from "../views/DatosPersonalesView.vue";
 
 const router = createRouter({
@@ -38,6 +39,11 @@ const router = createRouter({
             path:
                 "/denuncias/:id/editar",
             component: EditComplaintView
+        },
+        {
+            path: "/denuncias/:id/evidencia",
+            name: "subir-evidencia",
+            component: UploadEvidenceView,
         },
         {
             path: "/denuncias",
