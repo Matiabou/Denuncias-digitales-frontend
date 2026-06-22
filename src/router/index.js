@@ -50,6 +50,10 @@ const router = createRouter({
       path: "/denuncias",
       name: "denuncias",
       component: ListadoDenunciasView,
+      meta: {
+        requiresAuth: true,
+        userOnly: true,
+      },
     },
     {
       path: "/datos-personales",
