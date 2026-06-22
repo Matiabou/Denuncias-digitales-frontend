@@ -18,17 +18,14 @@ function cerrarSesion() {
 <template>
   <div class="layout">
     <aside v-if="estaAutenticado && route.path !== '/login'" class="sidebar">
-      <RouterLink to="/denuncias">
-        Mis denuncias
+      <RouterLink to="/denuncias"> Mis denuncias </RouterLink>
+
+      <RouterLink to="/datos-personales"> Datos personales </RouterLink>
+      <RouterLink v-if="authStore.esAdmin" to="/admin">
+        Administración
       </RouterLink>
 
-      <RouterLink to="/datos-personales">
-        Datos personales
-      </RouterLink>
-
-      <button @click="cerrarSesion">
-        Cerrar sesión
-      </button>
+      <button @click="cerrarSesion">Cerrar sesión</button>
     </aside>
 
     <main class="contenido">
