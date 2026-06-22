@@ -46,10 +46,20 @@
             <div class="evidencia-content">
               <div class="evidencia-info">
                 <p class="evidencia-name">
-                  {{ archivo.nombre || archivo.filename || archivo.ruta?.split('/').pop() || 'Evidencia' }}
+                  {{
+                    archivo.nombre ||
+                    archivo.filename ||
+                    archivo.ruta?.split("/").pop() ||
+                    "Evidencia"
+                  }}
                 </p>
 
-               <button class="btn-descarga-mini" @click="descargarArchivo(archivo)"> ⬇ Descargar</button>
+                <button
+                  class="btn-descarga-mini"
+                  @click="descargarArchivo(archivo)"
+                >
+                  ⬇ Descargar
+                </button>
 
                 <small class="evidencia-date">{{ archivo.fecha }}</small>
               </div>
@@ -57,12 +67,10 @@
           </div>
         </div>
 
-        <p v-else>
-          No hay evidencias adjuntas
-        </p>
+        <p v-else>No hay evidencias adjuntas</p>
       </div>
 
-      <router-link to="/denuncias" class="btn-volver">
+      <router-link :to="rutaVolver" class="btn-volver">
         Volver al listado
       </router-link>
     </div>
@@ -72,31 +80,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useComplaintsStore } from "@/stores/complaints";
+import { useAuthStore } from "@/stores/auth";
 
 const route = useRoute();
 const store = useComplaintsStore();
+const authStore = useAuthStore();
 
 const denuncia = ref(null);
 const isLoading = ref(false);
+
+const rutaVolver = computed(() =>
+  authStore.esAdmin ? "/admin" : "/denuncias",
+);
 
 async function descargarArchivo(archivo) {
   try {
     const response = await fetch(archivo.url);
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = archivo.nombre || archivo.filename || archivo.ruta?.split('/').pop() || 'evidencia';
+    link.download =
+      archivo.nombre ||
+      archivo.filename ||
+      archivo.ruta?.split("/").pop() ||
+      "evidencia";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error('Error descargando archivo:', error);
-    alert('Error al descargar el archivo');
+    console.error("Error descargando archivo:", error);
+    alert("Error al descargar el archivo");
   }
 }
 

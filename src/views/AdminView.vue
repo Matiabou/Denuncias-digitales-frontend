@@ -25,9 +25,15 @@
           </select>
         </div>
 
-        <button class="btn primary" @click="guardarEstado(denuncia)">
-          Guardar estado
-        </button>
+        <div class="acciones">
+          <button class="btn primary" @click="guardarEstado(denuncia)">
+            Guardar estado
+          </button>
+
+          <RouterLink class="btn secondary" :to="`/denuncias/${denuncia.id}`">
+            Ver detalle
+          </RouterLink>
+        </div>
       </article>
     </section>
   </div>
@@ -38,6 +44,7 @@ import { computed, onMounted } from "vue";
 import DenunciaCard from "@/components/denuncias/DenunciaCard.vue";
 import { useComplaintsStore } from "@/stores/complaints";
 import { useAuthStore } from "@/stores/auth";
+import { RouterLink } from "vue-router";
 
 const store = useComplaintsStore();
 const authStore = useAuthStore();
@@ -96,6 +103,13 @@ const denuncias = computed(() =>
   gap: 12px;
 }
 
+.acciones {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .estado-container {
   display: flex;
   flex-direction: column;
@@ -116,6 +130,12 @@ const denuncias = computed(() =>
 .btn.primary {
   background: #2b8aef;
   color: white;
+}
+.btn.secondary {
+  background: #64748b;
+  color: white;
+  text-decoration: none;
+  text-align: center;
 }
 
 .empty {
