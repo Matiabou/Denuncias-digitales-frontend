@@ -4,6 +4,22 @@
       <h1>Administración de denuncias</h1>
     </header>
 
+    <div class="filtros">
+      <label>Filtrar por tipo</label>
+
+      <select v-model="tipo" @change="filtrar">
+        <option value="">Todos</option>
+        <option value="Robo">Robo</option>
+        <option value="Hurto">Hurto</option>
+        <option value="Vandalismo">Vandalismo</option>
+        <option value="Fraude">Fraude</option>
+        <option value="Violencia">Violencia</option>
+        <option value="Estafa">Estafa</option>
+        <option value="Acoso">Acoso</option>
+        <option value="Otros">Otros</option>
+      </select>
+    </div>
+
     <p v-if="store.isLoading" class="empty">Cargando denuncias...</p>
 
     <p v-else-if="store.error" class="empty error">
@@ -40,7 +56,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import DenunciaCard from "@/components/denuncias/DenunciaCard.vue";
 import { useComplaintsStore } from "@/stores/complaints";
 import { useAuthStore } from "@/stores/auth";
@@ -48,6 +64,17 @@ import { RouterLink } from "vue-router";
 
 const store = useComplaintsStore();
 const authStore = useAuthStore();
+const tipoSeleccionado = ref("");
+
+const tipo = ref("");
+
+async function filtrar() {
+  if (!tipo.value) {
+    await store.loadComplaints(authStore.usuario);
+  } else {
+    await store.loadByType(tipo.value);
+  }
+}
 
 async function loadData() {
   await store.loadComplaints(authStore.usuario);
@@ -62,7 +89,6 @@ async function guardarEstado(denuncia) {
     alert(error.message);
   }
 }
-
 onMounted(loadData);
 
 const denuncias = computed(() =>
@@ -136,6 +162,19 @@ const denuncias = computed(() =>
   color: white;
   text-decoration: none;
   text-align: center;
+}
+.filtros {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.filtros select {
+  width: 250px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 .empty {

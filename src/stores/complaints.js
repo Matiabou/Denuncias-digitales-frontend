@@ -5,6 +5,7 @@ import {
   getComplaintById,
   getComplaints,
   updateComplaint,
+  getComplaintsByType,
 } from "@/services/complaintsService";
 
 export const useComplaintsStore = defineStore("complaints", {
@@ -40,7 +41,9 @@ export const useComplaintsStore = defineStore("complaints", {
 
       try {
         const complaint = await getComplaintById(id);
-        const index = this.complaints.findIndex((item) => item.id === complaint.id);
+        const index = this.complaints.findIndex(
+          (item) => item.id === complaint.id,
+        );
 
         if (index >= 0) {
           this.complaints[index] = complaint;
@@ -56,6 +59,18 @@ export const useComplaintsStore = defineStore("complaints", {
         this.isLoading = false;
       }
     },
+    async loadByType(tipo) {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        this.complaints = await getComplaintsByType(tipo);
+      } catch (error) {
+        this.error = error.message || "Error al filtrar denuncias";
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
     async create(data, user) {
       const complaint = await createComplaint(data, user);
@@ -65,7 +80,9 @@ export const useComplaintsStore = defineStore("complaints", {
 
     async update(id, data, user) {
       const complaint = await updateComplaint(id, data, user);
-      const index = this.complaints.findIndex((item) => item.id === complaint.id);
+      const index = this.complaints.findIndex(
+        (item) => item.id === complaint.id,
+      );
 
       if (index >= 0) {
         this.complaints[index] = complaint;
@@ -76,8 +93,17 @@ export const useComplaintsStore = defineStore("complaints", {
       return complaint;
     },
 
-    getById(id) { 
+    getById(id) {
       return this.complaints.find((item) => String(item.id) === String(id));
     },
+    async filtrarPorTipo(tipo) {
+      this.isLoading = true;
+
+      try {
+        this.complaints = await complaintsService.getByType(tipo);
+      } finally {
+        this.isLoading = false;
+      }
+    },
   },
-}); 
+});
