@@ -29,14 +29,14 @@ function normalizeComplaint(complaint = {}) {
 
 function buildComplaintPayload(data, user) {
   const userId =
-    user?.id ??
-    user?.idUsuario ??
-    user?.usuarioId ??
-    user?._id ??
     data.usuarioId ??
     data.idUsuario ??
     data.userId ??
     data.usuario ??
+    user?.id ??
+    user?.idUsuario ??
+    user?.usuarioId ??
+    user?._id ??
     null;
 
   return {
