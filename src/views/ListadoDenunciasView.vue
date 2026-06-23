@@ -1,10 +1,10 @@
 <template>
   <div class="denuncias-container">
     <header class="header">
-      <h1>Mis Denuncias</h1>
-      <router-link class="btn primary" to="/denuncias/crear"
-        >Crear denuncia</router-link
-      >
+      <h1>Mis denuncias</h1>
+      <router-link class="btn primary" to="/denuncias/crear">
+        Crear denuncia
+      </router-link>
     </header>
 
     <p v-if="store.isLoading" class="empty">
@@ -23,7 +23,7 @@
       <table v-else class="denuncias-table">
         <thead>
           <tr>
-            <th>Descripción</th>
+            <th>Título</th>
             <th>Ubicación</th>
             <th>Fecha</th>
             <th>Estado</th>
@@ -33,7 +33,7 @@
 
         <tbody>
           <tr v-for="denuncia in denuncias" :key="denuncia.id">
-            <td class="descripcion">{{ denuncia.descripcion || denuncia.titulo }}</td>
+            <td class="descripcion">{{ denuncia.titulo || denuncia.descripcion || "Sin título" }}</td>
             <td>{{ denuncia.ubicacion }}</td>
             <td>{{ denuncia.fecha }}</td>
             <td>
@@ -76,7 +76,6 @@ async function handleExportPDF(denunciaId) {
 }
 
 async function loadData() {
-  console.log(JSON.parse(JSON.stringify(authStore.usuario)));
   await store.loadComplaints(authStore.usuario);
 }
 
@@ -92,11 +91,11 @@ watch(
 const denuncias = computed(() =>
   store.complaints.map((c) => ({
     id: c.id,
-    titulo: c.descripcion ?? "Sin descripción",
-    descripcion: c.descripcion ?? "",
-    fecha: c.fecha ?? "",
-    estado: c.estado ?? "En revisión",
-    ubicacion: c.ubicacion ?? "",
+    titulo: c.titulo || c.title || c.descripcion || "Sin título",
+    descripcion: c.descripcion || c.description || "",
+    fecha: c.fecha || c.date || "",
+    estado: c.estado || c.status || "En revisión",
+    ubicacion: c.ubicacion || c.address || c.direccion || "",
     _raw: c,
   })),
 );

@@ -1,22 +1,25 @@
 <template>
   <div class="denuncias-container">
     <header class="header">
-      <h1>Administración de denuncias</h1>
+      <div>
+        <p class="eyebrow">Panel</p>
+        <h1>Administración de denuncias</h1>
+      </div>
+      <div class="header-badge">{{ denuncias.length }} denuncias</div>
     </header>
 
-    <div class="filtros">
-      <label>Filtrar por tipo</label>
-
-      <select v-model="tipo" @change="filtrar">
+    <div class="filtros card">
+      <label for="tipo-filtro">Filtrar por tipo</label>
+      <select id="tipo-filtro" v-model="tipo" @change="filtrar">
         <option value="">Todos</option>
-        <option value="Robo">Robo</option>
-        <option value="Hurto">Hurto</option>
-        <option value="Vandalismo">Vandalismo</option>
-        <option value="Fraude">Fraude</option>
-        <option value="Violencia">Violencia</option>
-        <option value="Estafa">Estafa</option>
-        <option value="Acoso">Acoso</option>
-        <option value="Otros">Otros</option>
+        <option value="robo">Robo</option>
+        <option value="hurto">Hurto</option>
+        <option value="vandalismo">Vandalismo</option>
+        <option value="fraude">Fraude</option>
+        <option value="violencia">Violencia</option>
+        <option value="estafa">Estafa</option>
+        <option value="acoso">Acoso</option>
+        <option value="otros">Otros</option>
       </select>
     </div>
 
@@ -26,8 +29,13 @@
       {{ store.error }}
     </p>
 
-    <section class="grid">
-      <article class="card" v-for="denuncia in denuncias" :key="denuncia.id">
+    <section v-else-if="denuncias.length" class="grid">
+      <article class="card denuncia-card" v-for="denuncia in denuncias" :key="denuncia.id">
+        <div class="meta">
+          <span class="pill">{{ denuncia.tipo || denuncia.type || "Sin tipo" }}</span>
+          <span class="pill muted">{{ denuncia.fecha || "Sin fecha" }}</span>
+        </div>
+
         <DenunciaCard :denuncia="denuncia" />
 
         <div class="estado-container">
@@ -52,6 +60,11 @@
         </div>
       </article>
     </section>
+
+    <div v-else class="empty-state card">
+      <h3>No hay denuncias para este filtro</h3>
+      <p>Probá con otro tipo o reseteá la búsqueda para ver todas.</p>
+    </div>
   </div>
 </template>
 
@@ -64,7 +77,6 @@ import { RouterLink } from "vue-router";
 
 const store = useComplaintsStore();
 const authStore = useAuthStore();
-const tipoSeleccionado = ref("");
 
 const tipo = ref("");
 
@@ -89,16 +101,18 @@ async function guardarEstado(denuncia) {
     alert(error.message);
   }
 }
+
 onMounted(loadData);
 
 const denuncias = computed(() =>
   store.complaints.map((c) => ({
     id: c.id,
-    titulo: c.descripcion ?? "Sin descripción",
-    descripcion: c.descripcion ?? "",
-    fecha: c.fecha ?? "",
-    estado: c.estado ?? "En revisión",
-    ubicacion: c.ubicacion ?? "",
+    titulo: c.titulo || c.title || c.descripcion || "Sin título",
+    descripcion: c.descripcion || c.description || "",
+    fecha: c.fecha || c.date || "",
+    estado: c.estado || c.status || "En revisión",
+    ubicacion: c.ubicacion || c.address || c.direccion || "",
+    tipo: c.tipo || c.type || "",
     ...c,
   })),
 );
@@ -108,10 +122,43 @@ const denuncias = computed(() =>
 .denuncias-container {
   max-width: 1100px;
   margin: 24px auto;
+  padding: 0 16px 24px;
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #2b8aef;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header-badge {
+  background: #ebf5ff;
+  color: #1d4ed8;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .grid {
@@ -120,13 +167,32 @@ const denuncias = computed(() =>
   gap: 16px;
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 16px;
+.denuncia-card {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: #1d4ed8;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pill.muted {
+  background: #f3f4f6;
+  color: #475569;
 }
 
 .acciones {
@@ -157,12 +223,14 @@ const denuncias = computed(() =>
   background: #2b8aef;
   color: white;
 }
+
 .btn.secondary {
   background: #64748b;
   color: white;
   text-decoration: none;
   text-align: center;
 }
+
 .filtros {
   display: flex;
   flex-direction: column;
@@ -179,6 +247,11 @@ const denuncias = computed(() =>
 
 .empty {
   text-align: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
 }
 
 .error {

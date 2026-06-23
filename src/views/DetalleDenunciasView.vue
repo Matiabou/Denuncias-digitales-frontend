@@ -8,29 +8,34 @@
       <h1 class="titulo">Detalle de la denuncia</h1>
 
       <div class="campo">
+        <span>Título</span>
+        <p>{{ denuncia.titulo || denuncia.title || "Sin título" }}</p>
+      </div>
+
+      <div class="campo">
         <span>Tipo de denuncia</span>
-        <p>{{ denuncia.type }}</p>
+        <p>{{ denuncia.tipo || denuncia.type || "Sin tipo" }}</p>
       </div>
 
       <div class="campo">
         <span>Descripción</span>
-        <p>{{ denuncia.description }}</p>
+        <p>{{ denuncia.descripcion || denuncia.description || "Sin descripción" }}</p>
       </div>
 
       <div class="campo">
         <span>Dirección</span>
-        <p>{{ denuncia.address }}</p>
+        <p>{{ denuncia.ubicacion || denuncia.address || "Sin dirección" }}</p>
       </div>
 
       <div class="fila">
         <div class="campo">
           <span>Fecha</span>
-          <p>{{ denuncia.date }}</p>
+          <p>{{ denuncia.fecha || denuncia.date || "Sin fecha" }}</p>
         </div>
 
         <div class="campo">
           <span>Hora</span>
-          <p>{{ denuncia.time }}</p>
+          <p>{{ denuncia.hora || denuncia.time || "Sin hora" }}</p>
         </div>
       </div>
 
@@ -61,8 +66,7 @@
                   ⬇ Descargar
                 </button>
 
-                <small class="evidencia-date"> {{ formatearFecha(archivo.fecha) }}
-                </small>
+                <small class="evidencia-date"> {{ formatearFecha(archivo.fecha) }} </small>
               </div>
             </div>
           </div>
@@ -81,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useComplaintsStore } from "@/stores/complaints";
 import { useAuthStore } from "@/stores/auth";
@@ -97,23 +101,15 @@ const rutaVolver = computed(() =>
   authStore.esAdmin ? "/admin" : "/denuncias",
 );
 
-
 async function descargarArchivo(archivo) {
   try {
     const response = await fetch(archivo.url);
-
-    console.log("🟡 Status:", response.status);
-    console.log("🟡 OK:", response.ok);
-    console.log("🟡 Content-Type:", response.headers.get("content-type"));
 
     if (!response.ok) {
       throw new Error(`Error al descargar archivo: ${response.status}`);
     }
 
     const blob = await response.blob();
-
-    console.log("🟢 Blob type:", blob.type);
-    console.log("🟢 Blob size:", blob.size);
 
     if (blob.size === 0) {
       throw new Error("El archivo está vacío (blob size = 0)");
@@ -129,22 +125,15 @@ async function descargarArchivo(archivo) {
       archivo.url?.split("/").pop() ||
       "archivo";
 
-    console.log("📁 Nombre final:", nombreArchivo);
-
     link.download = nombreArchivo;
 
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    // ⏱️ evitar corrupción por revoke inmediato
     setTimeout(() => {
       URL.revokeObjectURL(blobUrl);
-      console.log("♻️ Blob URL liberada");
     }, 1000);
-
-    console.log("✅ Descarga iniciada correctamente");
-
   } catch (error) {
     console.error("❌ Error en descarga:", error);
   }
@@ -154,24 +143,29 @@ watch(
   () => route.params.id,
   async (id) => {
     if (id) {
-      await store.loadComplaint(id, true); // 🔥 IMPORTANTE force=true
+      await store.loadComplaint(id, true);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 function formatearFecha(fecha) {
+  if (!fecha) return "Sin fecha";
+
   const date = new Date(fecha);
 
-  return date.toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }) + " " +
-  date.toLocaleTimeString("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  return (
+    date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }) +
+    " " +
+    date.toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  );
 }
 </script>
 
@@ -255,11 +249,6 @@ h1 {
   align-items: center;
   flex-wrap: wrap;
 }
-.evidencia-img {
-  max-width: 120px;
-  border-radius: 8px;
-  object-fit: cover;
-}
 .evidencia-info {
   display: flex;
   flex-direction: column;
@@ -268,13 +257,6 @@ h1 {
 .evidencia-name {
   margin: 0;
   font-weight: 600;
-}
-.evidencia-link {
-  color: #1d4ed8;
-  text-decoration: none;
-}
-.evidencia-link:hover {
-  text-decoration: underline;
 }
 .evidencia-date {
   color: #6b7280;

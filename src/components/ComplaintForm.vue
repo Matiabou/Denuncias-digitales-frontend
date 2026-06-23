@@ -6,6 +6,17 @@
       </h2>
 
       <div class="field">
+        <label for="titulo">Título</label>
+
+        <input
+          id="titulo"
+          v-model="form.titulo"
+          placeholder="Ej: Robo en el barrio"
+          required
+        />
+      </div>
+
+      <div class="field">
         <label for="tipo">Tipo de denuncia</label>
 
         <select id="tipo" v-model="form.type" required>
@@ -58,8 +69,8 @@
       </p>
 
       <button class="secondary" type="button" @click="router.back()">
-        volver
-   </button>
+        Volver
+      </button>
 
       <button :disabled="isSaving" type="submit">
         {{ isSaving ? "Guardando..." : isEdit ? "Guardar cambios" : "Enviar denuncia" }}
@@ -93,12 +104,13 @@ const isSaving = ref(false);
 
 function buildForm(data = {}) {
   return {
+    titulo: data.titulo || data.title || "",
     descripcion: data.descripcion || data.description || "",
     type: data.type || data.tipo || "",
     ubicacion: data.ubicacion || data.address || data.direccion || "",
     fecha: data.fecha || data.date || "",
     time: data.time || data.hora || "",
-    estado: data.estado || "en_revision",
+    estado: data.estado || "pendiente",
   };
 }
 
@@ -206,13 +218,6 @@ async function submit() {
 
 .row .field {
   flex: 1;
-}
-
-.upload {
-  padding: 20px;
-  border: 2px dashed #d0d7de;
-  border-radius: 8px;
-  text-align: center;
 }
 
 .actions {

@@ -1,7 +1,7 @@
 <template>
   <article class="denuncia-card">
     <div class="denuncia-header">
-      <h2>{{ denuncia.titulo }}</h2>
+      <h2>{{ denuncia.titulo || denuncia.title || "Sin título" }}</h2>
 
       <span class="estado">
         {{ denuncia.estado }}
@@ -9,11 +9,11 @@
     </div>
 
     <p>
-      {{ denuncia.descripcion }}
+      {{ denuncia.descripcion || denuncia.description || "Sin descripción" }}
     </p>
 
     <small>
-      {{ denuncia.fecha }}
+      {{ denuncia.fecha || denuncia.date || "Sin fecha" }}
     </small>
   </article>
 </template>
