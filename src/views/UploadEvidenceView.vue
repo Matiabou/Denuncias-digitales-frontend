@@ -67,6 +67,7 @@ async function submit() {
     formData.append("archivo", selectedFile.value);
 
     await uploadEvidence(route.params.id, formData);
+    await store.loadComplaint(route.params.id);
 
     alert("Evidencia subida correctamente.");
     router.push(`/denuncias/${route.params.id}`);

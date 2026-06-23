@@ -57,7 +57,9 @@
         {{ error }}
       </p>
 
-      <button class="secondary" type="button">Guardar borrador</button>
+      <button class="secondary" type="button" @click="router.back()">
+        volver
+   </button>
 
       <button :disabled="isSaving" type="submit">
         {{ isSaving ? "Guardando..." : isEdit ? "Guardar cambios" : "Enviar denuncia" }}

@@ -61,7 +61,8 @@
                   ⬇ Descargar
                 </button>
 
-                <small class="evidencia-date">{{ archivo.fecha }}</small>
+                <small class="evidencia-date"> {{ formatearFecha(archivo.fecha) }}
+                </small>
               </div>
             </div>
           </div>
@@ -89,62 +90,89 @@ const route = useRoute();
 const store = useComplaintsStore();
 const authStore = useAuthStore();
 
-const denuncia = ref(null);
+const denuncia = computed(() => store.getById(route.params.id));
 const isLoading = ref(false);
 
 const rutaVolver = computed(() =>
   authStore.esAdmin ? "/admin" : "/denuncias",
 );
 
+
 async function descargarArchivo(archivo) {
   try {
     const response = await fetch(archivo.url);
+
+    console.log("🟡 Status:", response.status);
+    console.log("🟡 OK:", response.ok);
+    console.log("🟡 Content-Type:", response.headers.get("content-type"));
+
+    if (!response.ok) {
+      throw new Error(`Error al descargar archivo: ${response.status}`);
+    }
+
     const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+
+    console.log("🟢 Blob type:", blob.type);
+    console.log("🟢 Blob size:", blob.size);
+
+    if (blob.size === 0) {
+      throw new Error("El archivo está vacío (blob size = 0)");
+    }
+
+    const blobUrl = URL.createObjectURL(blob);
+
     const link = document.createElement("a");
-    link.href = url;
-    link.download =
-      archivo.nombre ||
-      archivo.filename ||
+    link.href = blobUrl;
+
+    const nombreArchivo =
       archivo.ruta?.split("/").pop() ||
-      "evidencia";
+      archivo.url?.split("/").pop() ||
+      "archivo";
+
+    console.log("📁 Nombre final:", nombreArchivo);
+
+    link.download = nombreArchivo;
+
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    link.remove();
+
+    // ⏱️ evitar corrupción por revoke inmediato
+    setTimeout(() => {
+      URL.revokeObjectURL(blobUrl);
+      console.log("♻️ Blob URL liberada");
+    }, 1000);
+
+    console.log("✅ Descarga iniciada correctamente");
+
   } catch (error) {
-    console.error("Error descargando archivo:", error);
-    alert("Error al descargar el archivo");
+    console.error("❌ Error en descarga:", error);
   }
 }
-
-async function loadDenuncia() {
-  const id = route.params.id;
-
-  denuncia.value = store.getById(id);
-
-  if (!denuncia.value) {
-    isLoading.value = true;
-    try {
-      await store.loadComplaint(id);
-      denuncia.value = store.getById(id);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  console.log("ID recibido:", id);
-  console.log("Denuncia:", denuncia.value);
-}
-
-onMounted(loadDenuncia);
 
 watch(
   () => route.params.id,
-  () => {
-    loadDenuncia();
+  async (id) => {
+    if (id) {
+      await store.loadComplaint(id, true); // 🔥 IMPORTANTE force=true
+    }
   },
+  { immediate: true }
 );
+
+function formatearFecha(fecha) {
+  const date = new Date(fecha);
+
+  return date.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }) + " " +
+  date.toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
 </script>
 
 <style scoped>

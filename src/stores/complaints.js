@@ -29,48 +29,36 @@ export const useComplaintsStore = defineStore("complaints", {
       }
     },
 
-    async loadComplaint(id) {
-      const existing = this.getById(id);
+    async loadComplaint(id, force = false) {
+  if (!force) {
+    const existing = this.getById(id);
+    if (existing) return existing;
+  }
 
-      if (existing) {
-        return existing;
-      }
+  this.isLoading = true;
+  this.error = null;
 
-      this.isLoading = true;
-      this.error = null;
+  try {
+    const complaint = await getComplaintById(id);
 
-      try {
-        const complaint = await getComplaintById(id);
-        const index = this.complaints.findIndex(
-          (item) => item.id === complaint.id,
-        );
+    const index = this.complaints.findIndex(
+      (item) => String(item.id) === String(complaint.id)
+    );
 
-        if (index >= 0) {
-          this.complaints[index] = complaint;
-        } else {
-          this.complaints.push(complaint);
-        }
+    if (index >= 0) {
+      this.complaints[index] = complaint;
+    } else {
+      this.complaints.push(complaint);
+    }
 
-        return complaint;
-      } catch (error) {
-        this.error = error.message || "No se pudo cargar la denuncia";
-        return null;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async loadByType(tipo) {
-      this.isLoading = true;
-      this.error = null;
-
-      try {
-        this.complaints = await getComplaintsByType(tipo);
-      } catch (error) {
-        this.error = error.message || "Error al filtrar denuncias";
-      } finally {
-        this.isLoading = false;
-      }
-    },
+    return complaint;
+  } catch (error) {
+    this.error = error.message || "No se pudo cargar la denuncia";
+    return null;
+  } finally {
+    this.isLoading = false;
+  }
+},
 
     async create(data, user) {
       const complaint = await createComplaint(data, user);

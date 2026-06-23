@@ -42,7 +42,7 @@
             <td class="actions">
               <router-link class="btn primary small" :to="`/denuncias/${denuncia.id}`">Detalle</router-link>
               <router-link class="btn primary small" :to="`/denuncias/${denuncia.id}/editar`">Editar</router-link>
-              <router-link class="btn success small" :to="`/denuncias/${denuncia.id}/evidencia`">Subir evidencia</router-link>
+              <router-link class="btn success small" :to="`/denuncias/${denuncia.id}/evidencia`">Evidencia</router-link>
               <button class="btn success small export-btn" @click="handleExportPDF(denuncia.id)" :disabled="isExporting === denuncia.id">
                 {{ isExporting === denuncia.id ? 'Exportando...' : 'Exportar' }}
               </button>
