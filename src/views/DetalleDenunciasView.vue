@@ -19,7 +19,11 @@
 
       <div class="campo">
         <span>Descripción</span>
-        <p>{{ denuncia.descripcion || denuncia.description || "Sin descripción" }}</p>
+        <p>
+          {{
+            denuncia.descripcion || denuncia.description || "Sin descripción"
+          }}
+        </p>
       </div>
 
       <div class="campo">
@@ -66,13 +70,29 @@
                   ⬇ Descargar
                 </button>
 
-                <small class="evidencia-date"> {{ formatearFecha(archivo.fecha) }} </small>
+                <small class="evidencia-date">
+                  {{ formatearFecha(archivo.fecha) }}
+                </small>
               </div>
             </div>
           </div>
         </div>
 
         <p v-else>No hay evidencias adjuntas</p>
+      </div>
+      <div class="campo">
+        <span>Nombre</span>
+        <p>{{ denuncia.usuario?.nombre }}</p>
+      </div>
+
+      <div class="campo">
+        <span>Apellido</span>
+        <p>{{ denuncia.usuario?.apellido }}</p>
+      </div>
+
+      <div class="campo">
+        <span>DNI</span>
+        <p>{{ denuncia.usuario?.dni }}</p>
       </div>
 
       <router-link :to="rutaVolver" class="btn-volver">

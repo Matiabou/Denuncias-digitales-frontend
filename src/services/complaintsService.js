@@ -89,13 +89,15 @@ export async function getComplaints(user) {
 
 export async function getComplaintById(id) {
   const response = await apiRequest(`/api/denuncias/${id}`);
-
+  console.log("RESPUESTA BACKEND:", response);
   return normalizeComplaint(response?.denuncia ?? response);
 }
 
 export async function getComplaintsByType(tipo) {
   const normalizedTipo = normalizeTypeValue(tipo);
-  const response = await apiRequest(`/api/denuncias/tipo/${encodeURIComponent(normalizedTipo)}`);
+  const response = await apiRequest(
+    `/api/denuncias/tipo/${encodeURIComponent(normalizedTipo)}`,
+  );
 
   if (Array.isArray(response)) {
     return response.map(normalizeComplaint);
