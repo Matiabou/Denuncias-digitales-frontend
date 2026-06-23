@@ -52,6 +52,4 @@ La aplicación utiliza Pinia para la gestión del estado global.
 
 ## Deploy y Secrets de GitHub
 
-La aplicación se encuentra desplegada mediante Vercel.
-
-Actualmente el proyecto no utiliza Secrets de GitHub para el proceso de despliegue.
+https://denuncias-digitales-frontend.vercel.app/
